@@ -225,7 +225,7 @@ export default function JobCrudApp() {
                     {
                       label: "Salary *",
                       key: "salary",
-                      placeholder: "e.g., $50k - $80k",
+                      placeholder: "e.g.,  ₱50k -  ₱80k",
                     },
                     {
                       label: "Location *",
@@ -350,7 +350,6 @@ export default function JobCrudApp() {
               </div>
             </div>
           </div>
-          
         </div>
       </div>
 
