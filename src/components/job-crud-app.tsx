@@ -1,18 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trash2, Edit2, Plus, X } from "lucide-react";
-
-interface Job {
-  id: number;
-  company: string;
-  position: string;
-  source: string;
-  salary: string;
-  location: string;
-  schedule: string;
-  status: string;
-}
+import { Plus, X } from "lucide-react";
+import type { Job } from "../lib/utils";
+import TableInfo from "./table-info";
+import JobFilter from "./job-filter";
+import ModalDeleteProps from "./job-modal-delete";
 
 const SCHEDULE_OPTIONS = [
   "Full-time",
@@ -344,136 +337,30 @@ export default function JobCrudApp() {
 
               <div className='overflow-x-auto'>
                 {filteredJobs.length === 0 ? (
-                  <div className='text-center py-16 px-6'>
-                    <p className='text-gray-500 text-lg font-medium'>
-                      📭 No jobs found
-                    </p>
-                    <p className='text-gray-400 mt-1'>
-                      {jobs.length === 0
-                        ? "Add your first job application to get started!"
-                        : "Try a different search term"}
-                    </p>
-                  </div>
+                  <JobFilter jobs={jobs} />
                 ) : (
-                  <table className='w-full'>
-                    <thead>
-                      <tr className='bg-gray-50 border-b-2 border-gray-200'>
-                        {[
-                          "Company",
-                          "Position",
-                          "Source",
-                          "Salary",
-                          "Location",
-                          "Schedule",
-                          "Status",
-                          "Actions",
-                        ].map((header) => (
-                          <th
-                            key={header}
-                            className='text-left py-4 px-6 font-semibold text-gray-700'
-                          >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredJobs.map((job) => (
-                        <tr
-                          key={job.id}
-                          className='border-b hover:bg-blue-50 transition'
-                        >
-                          <td className='py-4 px-6 font-semibold text-gray-900'>
-                            {job.company}
-                          </td>
-                          <td className='py-4 px-6 text-gray-800'>
-                            {job.position}
-                          </td>
-                          <td className='py-4 px-6 text-gray-800'>
-                            {job.source}
-                          </td>
-                          <td className='py-4 px-6 text-green-600 font-semibold'>
-                            {job.salary}
-                          </td>
-                          <td className='py-4 px-6 text-gray-800'>
-                            {job.location}
-                          </td>
-                          <td className='py-4 px-6'>
-                            <span
-                              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getScheduleColor(
-                                job.schedule,
-                              )}`}
-                            >
-                              {job.schedule}
-                            </span>
-                          </td>
-                          <td className='py-4 px-6'>
-                            <span
-                              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                                job.status,
-                              )}`}
-                            >
-                              {job.status}
-                            </span>
-                          </td>
-                          <td className='py-4 px-6 text-center'>
-                            <div className='flex justify-center gap-3'>
-                              <button
-                                onClick={() => handleEditJob(job)}
-                                className='p-2 text-blue-600 hover:bg-blue-100 rounded-lg'
-                                title='Edit'
-                              >
-                                <Edit2 className='w-4 h-4' />
-                              </button>
-                              <button
-                                onClick={() => setDeleteConfirm(job.id)}
-                                className='p-2 text-red-600 hover:bg-red-100 rounded-lg'
-                                title='Delete'
-                              >
-                                <Trash2 className='w-4 h-4' />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <TableInfo
+                    filteredJobs={filteredJobs}
+                    handleEditJob={handleEditJob}
+                    setDeleteConfirm={setDeleteConfirm}
+                    getScheduleColor={getScheduleColor}
+                    getStatusColor={getStatusColor}
+                  />
                 )}
               </div>
             </div>
           </div>
+          
         </div>
       </div>
 
       {/* Delete Confirmation */}
       {deleteConfirm !== null && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm'>
-          <div className='bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-200'>
-            <h3 className='text-xl font-bold text-gray-900 mb-4'>
-              🗑️ Confirm Delete
-            </h3>
-            <p className='text-gray-700 mb-6'>
-              Are you sure you want to delete this job application?{" "}
-              <span className='font-semibold'>
-                This action cannot be undone.
-              </span>
-            </p>
-            <div className='flex gap-3'>
-              <button
-                onClick={() => setDeleteConfirm(null)}
-                className='flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg'
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDeleteJob(deleteConfirm)}
-                className='flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg'
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+        <ModalDeleteProps
+          setDeleteConfirm={setDeleteConfirm}
+          handleDeleteJob={handleDeleteJob}
+          deleteConfirm={deleteConfirm}
+        />
       )}
     </div>
   );

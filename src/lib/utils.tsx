@@ -1,18 +1,28 @@
-type ClassValue = string | undefined | false | null | Record<string, boolean>;
+export interface Job {
+  id: number;
+  company: string;
+  position: string;
+  source: string;
+  salary: string;
+  location: string;
+  schedule: string;
+  status: string;
+}
 
-export function cn(...classes: ClassValue[]): string {
-  return classes
-    .map((c) => {
-      if (!c) return "";
-      if (typeof c === "string") return c;
-      if (typeof c === "object") {
-        return Object.entries(c)
-          .filter(([_, value]) => Boolean(value))
-          .map(([key]) => key)
-          .join(" ");
-      }
-      return "";
-    })
-    .filter(Boolean)
-    .join(" ");
+export interface TableInfoProps {
+  filteredJobs: Job[];
+  handleEditJob: (job: Job) => void;
+  setDeleteConfirm: (id: number | null) => void;
+  getScheduleColor: (Job: string) => void;
+  getStatusColor: (Job: string) => void;
+}
+
+export interface JobFilterProps {
+  jobs: Job[];
+}
+
+export interface ModalDeleteProps {
+  setDeleteConfirm: (jobId: number | null) => void;
+  handleDeleteJob: (id: number) => void;
+  deleteConfirm: number | null;
 }
